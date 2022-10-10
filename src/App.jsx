@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Homepage from "./pages/homepage/homepage.component";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import ShopPage from "./pages/shop/shop.component";
 import "./app.styles.scss";
 import Header from "./components/header/header.component";
@@ -17,6 +22,7 @@ const Hats = () => {
 
 const App = () => {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   let unsubscribeFromAuth = null;
 
@@ -50,7 +56,10 @@ const App = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/shop/hats" element={<Hats />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route
+          path="/auth"
+          element={currentUser ? <Navigate to="/" replace /> : <Auth />}
+        />
       </Routes>
     </Router>
   );
