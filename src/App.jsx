@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Homepage from "./pages/homepage/homepage.component";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ShopPage from "./pages/shop/shop.component";
@@ -8,61 +9,51 @@ import Auth from "./pages/auth/auth.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 import { onAuthStateChanged } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
+import { SET_CURRENT_USER } from "./store/userSlice";
 
 const Hats = () => {
   return <h1>Hats</h1>;
 };
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentUser: null,
-    };
-  }
+const App = () => {
+  const dispatch = useDispatch();
 
-  unsubscribeFromAuth = null;
+  let unsubscribeFromAuth = null;
 
-  componentDidMount() {
-    this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
+  useEffect(() => {
+    unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
         onSnapshot(userRef, (snapShot) => {
-          this.setState({
-            currentUser: {
+          dispatch(
+            SET_CURRENT_USER({
               id: snapShot.id,
               ...snapShot.data(),
-            },
-          });
-
-          console.log(this.state);
+            })
+          );
         });
       }
 
-      this.setState({ currentUser: userAuth });
+      dispatch(SET_CURRENT_USER(userAuth));
     });
-  }
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+    return () => {
+      unsubscribeFromAuth();
+    };
+  }, []);
 
-  render() {
-    return (
-      <div className="App">
-        <Router>
-          <Header currentUser={this.state.currentUser} />
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/hats" element={<Hats />} />
-            <Route path="/shop" element={<ShopPage />} />
-          </Routes>
-        </Router>
-      </div>
-    );
-  }
-}
+  return (
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop/hats" element={<Hats />} />
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;
