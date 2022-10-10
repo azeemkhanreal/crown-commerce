@@ -5,8 +5,9 @@ import ShopPage from "./pages/shop/shop.component";
 import "./app.styles.scss";
 import Header from "./components/header/header.component";
 import Auth from "./pages/auth/auth.component";
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 import { onAuthStateChanged } from "firebase/auth";
+import { onSnapshot } from "firebase/firestore";
 
 const Hats = () => {
   return <h1>Hats</h1>;
@@ -23,8 +24,23 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = onAuthStateChanged(auth, (user) => {
-      this.setState({ currentUser: user });
+    this.unsubscribeFromAuth = onAuthStateChanged(auth, async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        onSnapshot(userRef, (snapShot) => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data(),
+            },
+          });
+
+          console.log(this.state);
+        });
+      }
+
+      this.setState({ currentUser: userAuth });
     });
   }
 
