@@ -38,4 +38,10 @@
             border: none;
         }
     }
+
+    &.inverted {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #000;
+    }
 }
