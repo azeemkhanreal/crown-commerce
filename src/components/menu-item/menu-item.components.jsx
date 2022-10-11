@@ -5,7 +5,10 @@ const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
   const navigate = useNavigate();
 
   return (
-    <div className={`${size} menu-item`} onClick={() => navigate(linkUrl)}>
+    <div
+      className={`${size} menu-item`}
+      onClick={() => navigate(`/shop/${linkUrl}`)}
+    >
       <div
         className="background-image"
         style={{
