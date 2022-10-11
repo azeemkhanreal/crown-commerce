@@ -5,6 +5,7 @@ import { logger } from "redux-logger";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import directoryReducer from "./directory/directorySlice";
+import shopReducer from "./shop/shopSlice";
 
 const persistConfig = {
   key: "root",
@@ -18,6 +19,7 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
     cart: persistedReducer,
+    shop: shopReducer,
     directory: directoryReducer,
   },
   middleware: (getDefaultMiddleware) =>

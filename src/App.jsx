@@ -12,6 +12,7 @@ import { onSnapshot } from "firebase/firestore";
 import { SET_CURRENT_USER } from "./store/user/userSlice";
 import { selectCurrentUser } from "./store/user/user.selectors";
 import CheckoutPage from "./pages/checkout/checkout.component";
+import CollectionPage from "./pages/collection/collection.component";
 
 const Hats = () => {
   return <h1>Hats</h1>;
@@ -50,8 +51,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/shop/hats" element={<Hats />} />
+        <Route path="/shop/*" element={<ShopPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route
           path="/auth"
