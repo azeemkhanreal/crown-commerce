@@ -12,15 +12,11 @@ import { onSnapshot } from "firebase/firestore";
 import { SET_CURRENT_USER } from "./store/user/userSlice";
 import { selectCurrentUser } from "./store/user/user.selectors";
 import CheckoutPage from "./pages/checkout/checkout.component";
-import CollectionPage from "./pages/collection/collection.component";
-
-const Hats = () => {
-  return <h1>Hats</h1>;
-};
 
 const App = () => {
   const dispatch = useDispatch();
   const currentUser = selectCurrentUser(useSelector((state) => state));
+
   let unsubscribeFromAuth = null;
 
   useEffect(() => {

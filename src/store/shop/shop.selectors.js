@@ -23,5 +23,5 @@ export const COLLECTION_ID_MAP = {
 
 export const selectCollection = (collectionUrlParam) =>
   createSelector([selectCollections], (collections) => {
-    return collections[collectionUrlParam];
+    return collections ? collections[collectionUrlParam] : null;
   });
